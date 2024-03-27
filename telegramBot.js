@@ -1,11 +1,11 @@
 const TelegramBot = require('node-telegram-bot-api')
 require('dotenv').config()
 const { initializeMoneyHandler } = require('./moneyHandler')
-const { getArchivedData } = require('./archiveHandler') // Assuming you have an archive handler file
+const { getArchivedData } = require('./archiveHandler')
 
 const bot = new TelegramBot(process.env.TOKEN, { polling: true })
 
-let isBotActive = false // Set initial state to false
+let isBotActive = false
 let chatContext = {}
 
 const { moneyType, askForValues } = initializeMoneyHandler(bot, chatContext)
@@ -56,17 +56,27 @@ bot.on('callback_query', (query) => {
 
 bot.onText(/\/start/, (msg) => {
 	const chatId = msg.chat.id
-	bot.sendMessage(chatId, 'Click the button below to start the bot.', {
-		reply_markup: {
-			inline_keyboard: [[{ text: 'Start Bot', callback_data: 'start_bot' }]],
-		},
-	})
+	bot.sendMessage(
+		chatId,
+		"💰 Welcome to Casa Bot! Your indispensable assistant for counting money at the cash register. 💼 Whether you're managing a store, handling finances, or simply want to streamline your money-counting process, Casa Bot is here to help! 🤖 Feel free to explore our features, ask questions, and let's make handling cash a breeze! 💸🔢",
+		{
+			reply_markup: {
+				inline_keyboard: [
+					[{ text: 'Start counting 💸', callback_data: 'start_bot' }],
+				],
+			},
+		}
+	)
 })
 
-bot.onText(/\/stop/, (msg) => {
+bot.onText(/\/help/, (msg) => {
 	const chatId = msg.chat.id
-	bot.sendMessage(chatId, 'Bot stopped.')
-	isBotActive = false // Set isBotActive to false when /stop command is received
+	bot.sendMessage(
+		chatId,
+		"🤖 Need help? Here's how I can assist you:\n\n" +
+			"1. **Money Counting**: Just add the amount to the suggested denomination and I'll calculate the total for you!\n" +
+			"\nIf you get stuck, just type /help and I'll be there to assist you. Glad to help! 🌟"
+	)
 })
 
 bot.onText(/\/archive/, (msg) => {

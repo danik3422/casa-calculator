@@ -36,30 +36,22 @@ const initializeMoneyHandler = (telegramBot, chatContext) => {
 		} else {
 			// All values have been set, show result to the user
 			const result = Object.entries(moneyType)
-				.sort((a, b) => b[0].localeCompare(a[0]))
+				.sort((a, b) => parseFloat(b[0]) - parseFloat(a[0]))
 				.map(([key, value]) => `${key}: ${value}`)
 				.join('\n')
 
-			bot.sendMessage(
-				chatId,
-				'🕗' +
-					' ' +
-					new Date().toISOString().split('T')[0] +
-					'\n' +
-					result +
-					'\n' +
-					'All money' +
-					' ' +
-					sumKey(moneyType) +
-					'\n' +
-					'Money in casa' +
-					' ' +
-					sumSmall(moneyType)
-			)
+			const totalMoney = sumDenominations(moneyType)
+			const moneyInCasa = sumSmallDenominations(moneyType)
+
+			const message = `🕗 ${
+				new Date().toISOString().split('T')[0]
+			}\n\n${result}\n\nAll money: ${totalMoney} PLN\nMoney in casa: ${moneyInCasa} PLN`
+
+			bot.sendMessage(chatId, message)
 		}
 	}
 
-	const sumKey = (obj) => {
+	const sumDenominations = (obj) => {
 		let resultSum = 0
 
 		for (let key in obj) {
@@ -70,7 +62,7 @@ const initializeMoneyHandler = (telegramBot, chatContext) => {
 		return resultSum.toFixed(2)
 	}
 
-	const sumSmall = (obj) => {
+	const sumSmallDenominations = (obj) => {
 		let resultSmall = 0
 
 		for (let key in obj) {
@@ -84,7 +76,7 @@ const initializeMoneyHandler = (telegramBot, chatContext) => {
 	}
 
 	// Return necessary functions or variables
-	return { askForValues, sumKey, sumSmall, moneyType }
+	return { askForValues, sumDenominations, sumSmallDenominations, moneyType }
 }
 
 module.exports = { initializeMoneyHandler }
