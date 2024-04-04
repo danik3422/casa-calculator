@@ -47,7 +47,15 @@ const initializeMoneyHandler = (telegramBot, chatContext) => {
 				new Date().toISOString().split('T')[0]
 			}\n\n${result}\n\nAll money: ${totalMoney} PLN\nMoney in casa: ${moneyInCasa} PLN`
 
-			bot.sendMessage(chatId, message)
+			bot.sendMessage(chatId, message).then(() => {
+				bot.sendMessage(chatId, 'Choose what to do next 😎', {
+					reply_markup: {
+						inline_keyboard: [
+							[{ text: 'Start counting 💸', callback_data: 'start_bot' }],
+						],
+					},
+				})
+			})
 		}
 	}
 

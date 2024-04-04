@@ -4,13 +4,17 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"dev": "vc dev",
+    "dev-with-tunnel": "npm run tunnel & npm run dev",
+    "tunnel": "cloudflared tunnel --url http://localhost:3000"
 	},
 	"keywords": [],
 	"author": "Danylo Syloats",
 	"license": "ISC",
 	"dependencies": {
 		"dotenv": "^16.4.5",
-		"node-telegram-bot-api": "^0.65.1"
+		"node-telegram-bot-api": "^0.65.1",
+		"telebot": "^1.4.1",
+		"telebot-vercel": "^1.0.1"
 	}
 }
